@@ -424,7 +424,7 @@ const players = [
         age: 25,
         weight: 75,
         position: "Orta Saha",
-        avatar: createAvatarSVG("AY", "#64ffda", "#0a192f")
+        avatar: createAvatarSVG("AY", "#3b82f6", "#ffffff")
     },
     {
         id: 2,
@@ -432,7 +432,7 @@ const players = [
         age: 28,
         weight: 82,
         position: "Defans",
-        avatar: createAvatarSVG("MK", "#4dd0b4", "#0a192f")
+        avatar: createAvatarSVG("MK", "#1d4ed8", "#ffffff")
     },
     {
         id: 3,
