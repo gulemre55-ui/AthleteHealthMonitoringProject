@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerçek Zamanlı Nabız İzleme Paneli</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Chart.js kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js zoom/pan eklentisi geçici olarak kaldırıldı -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script> -->
+
+    <!-- PDF oluşturma kütüphaneleri -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            <span class="close-btn" onclick="hideErrorMessage()">&times;</span>
+            <span id="errorText"></span>
+        </div>
+
+        <header>
+            <h1>Gerçek Zamanlı Nabız İzleme</h1>
+        </header>
+
+        <main class="dashboard-main">
+            <!-- Ana İçerik Alanı -->
+            <div class="main-content">
+                <!-- Birleşik Kontrol Paneli -->
+                <div class="control-panel">
+                    <!-- Zaman Aralığı Butonları -->
+                    <div class="control-row">
+                        <button class="control-btn time-btn active" data-range="daily">Günlük</button>
+                        <button class="control-btn time-btn" data-range="monthly">Aylık</button>
+                        <button class="control-btn time-btn" data-range="yearly">Yıllık</button>
+                    </div>
+
+                    <!-- Tarih ve Interval Seçiciler (Sadece Günlük Görünümde) -->
+                    <div class="control-row date-row" id="dateDensitySelector">
+                        <input type="date" id="dateInput" class="date-input control-btn">
+                        <button class="control-btn interval-btn left-rounded" data-interval="10">10 Dakika</button>
+                        <button class="control-btn interval-btn right-rounded active" data-interval="60">1 Saat</button>
+                        <button class="control-btn pdf-btn" id="pdfBtn">📄 PDF İndir</button>
+                    </div>
+                </div>
+
+                <!-- Grafik Konteyneri -->
+                <div class="chart-container">
+                    <div class="loading-indicator" id="loadingIndicator">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text">Veri yükleniyor...</div>
+                    </div>
+                    <div class="pan-hint" id="panHint">
+                        <span>🎮 Sağ üstteki butonlarla grafiği kontrol edebilirsiniz</span>
+                    </div>
+
+                    <canvas id="heartRateChart"></canvas>
+                </div>
+
+                <!-- İstatistik Kartları -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-label">En Yüksek</div>
+                        <div class="stat-value" id="maxBpm">--</div>
+                        <div class="stat-unit">BPM</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Ortalama</div>
+                        <div class="stat-value" id="avgBpm">--</div>
+                        <div class="stat-unit">BPM</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">En Düşük</div>
+                        <div class="stat-value" id="minBpm">--</div>
+                        <div class="stat-unit">BPM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sporcu Listesi Paneli -->
+            <div class="players-panel">
+                <h3 class="panel-title">Sporcular</h3>
+                <div class="players-list" id="playersList">
+                    <!-- Sporcu listesi JavaScript ile doldurulacak -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
