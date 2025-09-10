@@ -58,7 +58,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // LocalStorage'dan tema tercihini al
     const savedTheme = localStorage.getItem('theme') || 'dark';
     body.classList.toggle('light-mode', savedTheme === 'light');
+    document.documentElement.classList.toggle('light-mode', savedTheme === 'light'); // HTML elementine de sınıf ekle
     updateThemeIcon(savedTheme);
+
+    // Debug log
+    console.log('🎨 Tema yüklendi:', savedTheme);
+    console.log('📋 Body classes:', body.className);
+    console.log('🔍 Light mode class var mı:', body.classList.contains('light-mode'));
+    console.log('🔍 HTML classes:', document.documentElement.className);
 
     // Tema değiştirme fonksiyonu
     function toggleTheme() {
@@ -66,8 +73,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const newTheme = isLight ? 'dark' : 'light';
 
         body.classList.toggle('light-mode');
+        document.documentElement.classList.toggle('light-mode'); // HTML elementine de sınıf ekle
         localStorage.setItem('theme', newTheme);
         updateThemeIcon(newTheme);
+
+        // Debug log
+        console.log('🔄 Tema değiştirildi:', newTheme);
+        console.log('📋 Yeni body classes:', body.className);
+        console.log('🔍 Light mode class var mı:', body.classList.contains('light-mode'));
+        console.log('🔍 HTML classes:', document.documentElement.className);
     }
 
     // Tema ikonunu güncelle
@@ -205,13 +219,6 @@ document.addEventListener('DOMContentLoaded', function() {
             playerElement.className = 'player-item';
             playerElement.setAttribute('data-player-id', player.id);
 
-            // Avatar
-            const avatarImg = document.createElement('img');
-            avatarImg.className = 'player-avatar';
-            avatarImg.src = player.avatar;
-            avatarImg.alt = player.name;
-            // Base64 SVG kullandığımız için fallback'e gerek yok
-
             // Sporcu bilgileri container
             const playerInfo = document.createElement('div');
             playerInfo.className = 'player-info';
@@ -220,23 +227,25 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerName = document.createElement('div');
             playerName.className = 'player-name';
             playerName.textContent = player.name;
-            playerName.setAttribute('data-tooltip', player.name); // Custom tooltip için
 
             // Detaylar
             const playerDetails = document.createElement('div');
             playerDetails.className = 'player-details';
             playerDetails.textContent = `${player.age} yaş • ${player.weight}kg • ${player.position}`;
-            playerDetails.setAttribute('data-tooltip', `${player.age} yaş • ${player.weight}kg • ${player.position}`); // Custom tooltip için
 
             // Çoklu seçim göstergesi
             const multiSelectIndicator = document.createElement('div');
             multiSelectIndicator.className = 'multi-select-indicator';
             multiSelectIndicator.textContent = '✓';
 
+            // Seçili değilse boş dikdörtgen göster
+            if (!appState.selectedPlayers.some(p => p.id === player.id)) {
+                multiSelectIndicator.textContent = '';
+            }
+
             // Elementleri birleştir
             playerInfo.appendChild(playerName);
             playerInfo.appendChild(playerDetails);
-            playerElement.appendChild(avatarImg);
             playerElement.appendChild(playerInfo);
             playerElement.appendChild(multiSelectIndicator);
 
@@ -275,23 +284,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Seçiliyse kaldır
                 appState.selectedPlayers = appState.selectedPlayers.filter(p => p.id !== player.id);
                 playerElement.classList.remove('active');
+                // Göstergeyi güncelle
+                const indicator = playerElement.querySelector('.multi-select-indicator');
+                if (indicator) indicator.textContent = '';
                 console.log('✅ DEBUG: Sporcu çoklu seçimden çıkarıldı:', player.name);
             } else {
                 // Seçili değilse ekle
                 appState.selectedPlayers.push(player);
                 playerElement.classList.add('active');
+                // Göstergeyi güncelle
+                const indicator = playerElement.querySelector('.multi-select-indicator');
+                if (indicator) indicator.textContent = '✓';
                 console.log('✅ DEBUG: Sporcu çoklu seçime eklendi:', player.name);
             }
         } else {
             // Normal click: Tek seçim
-            // Tüm seçimleri kaldır
-            playersList.querySelectorAll('.player-item.active').forEach(el => {
+            // Tüm seçimleri kaldır ve göstergeleri sıfırla
+            playersList.querySelectorAll('.player-item').forEach(el => {
                 el.classList.remove('active');
+                const indicator = el.querySelector('.multi-select-indicator');
+                if (indicator) indicator.textContent = '';
             });
 
             // Sadece bu sporcuyu seç
             appState.selectedPlayers = [player];
             playerElement.classList.add('active');
+            // Göstergeyi güncelle
+            const indicator = playerElement.querySelector('.multi-select-indicator');
+            if (indicator) indicator.textContent = '✓';
             console.log('✅ DEBUG: Tek seçim yapıldı:', player.name);
         }
 
@@ -338,22 +358,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Sporcu paneli yüksekliğini ana içerik ile eşitle (sadece masaüstü için)
+    // Sporcu paneli yüksekliğini istatistik kartlarının başladığı yere kadar ayarla (sadece masaüstü için)
     function adjustPanelHeight() {
         if (window.innerWidth <= 1024) return; // Mobil/tablet'te otomatik yükseklik
 
         const mainContent = document.querySelector('.main-content');
         const playersPanel = document.querySelector('.players-panel');
+        const statsContainer = document.querySelector('.stats-container');
 
-        if (mainContent && playersPanel) {
-            const mainContentHeight = mainContent.offsetHeight;
-            playersPanel.style.height = mainContentHeight + 'px';
+        if (mainContent && playersPanel && statsContainer) {
+            // İstatistik kartlarının alt kenarının konumunu hesapla
+            const statsBottom = statsContainer.offsetTop + statsContainer.offsetHeight;
+            const mainContentTop = mainContent.offsetTop;
+            const targetHeight = statsBottom - mainContentTop;
+
+            // Minimum yükseklik kontrolü
+            const minHeight = 400;
+            const finalHeight = Math.max(targetHeight, minHeight);
+
+            playersPanel.style.height = finalHeight + 'px';
+            console.log('🔧 DEBUG: Panel yüksekliği ayarlandı:', finalHeight, 'px (stats-bottom:', statsBottom, 'main-top:', mainContentTop, ')');
         }
     }
 
     // Sayfa yüklendiğinde ve pencere boyutu değiştiğinde yüksekliği ayarla
     adjustPanelHeight();
     window.addEventListener('resize', adjustPanelHeight);
+
+    // İlk yüklemeden sonra da yüksekliği ayarla (istatistikler yüklenene kadar bekle)
+    setTimeout(adjustPanelHeight, 500);
 
     // Veri güncellendiğinde yüksekliği yeniden ayarla
     const originalLoadChartData = loadChartData;
@@ -389,8 +422,8 @@ document.addEventListener('DOMContentLoaded', function() {
             useCORS: true,
             allowTaint: true
         }).then(canvasImg => {
-            // PDF oluştur
-            const pdf = new jsPDF('p', 'mm', 'a4');
+            // PDF oluştur - Yatay modda
+            const pdf = new jsPDF('l', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
 
@@ -413,17 +446,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const now = new Date();
             pdf.text(`Rapor Olusturulma Tarihi: ${now.toLocaleString('tr-TR')}`, 20, 66);
 
-            // Grafik görüntüsü
+            // Grafik görüntüsü - Yatay mod için optimize edilmiş
             const imgData = canvasImg.toDataURL('image/png');
-            const imgWidth = pdfWidth - 40;
+            const imgWidth = pdfWidth - 60; // Daha geniş kenar boşlukları
             const imgHeight = (canvasImg.height * imgWidth) / canvasImg.width;
 
-            if (imgHeight > pdfHeight - 80) {
+            if (imgHeight > pdfHeight - 60) {
                 // Görüntü çok büyükse küçült
-                const scale = (pdfHeight - 80) / imgHeight;
-                pdf.addImage(imgData, 'PNG', 20, 75, imgWidth * scale, imgHeight * scale);
+                const scale = (pdfHeight - 60) / imgHeight;
+                pdf.addImage(imgData, 'PNG', 30, 50, imgWidth * scale, imgHeight * scale);
             } else {
-                pdf.addImage(imgData, 'PNG', 20, 75, imgWidth, imgHeight);
+                pdf.addImage(imgData, 'PNG', 30, 50, imgWidth, imgHeight);
             }
 
             // PDF'i indir
@@ -652,6 +685,9 @@ document.addEventListener('DOMContentLoaded', function() {
         minBpmElement.textContent = min;
 
         console.log(`✅ DEBUG: İstatistikler güncellendi - ${playerText}: Max:${max}, Avg:${avg}, Min:${min}`);
+
+        // İstatistikler güncellendikten sonra panel yüksekliğini ayarla
+        setTimeout(adjustPanelHeight, 50);
     }
     
     

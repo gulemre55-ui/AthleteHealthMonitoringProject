@@ -13,7 +13,11 @@ function generateRandomBpm(playerId = 1) {
         7: 80,  // Sporcu 7 - Çok yüksek
         8: 73,  // Sporcu 8 - Normal
         9: 69,  // Sporcu 9 - Normal-düşük
-        10: 76  // Sporcu 10 - Yüksek
+        10: 76, // Sporcu 10 - Yüksek
+        11: 71, 12: 74, 13: 67, 14: 79, 15: 66, 16: 81, 17: 69, 18: 75, 19: 68, 20: 77,
+        21: 70, 22: 73, 23: 76, 24: 65, 25: 82, 26: 72, 27: 78, 28: 67, 29: 80, 30: 71,
+        31: 74, 32: 69, 33: 75, 34: 68, 35: 79, 36: 66, 37: 81, 38: 73, 39: 77, 40: 70,
+        41: 76, 42: 65, 43: 82, 44: 72, 45: 78, 46: 67, 47: 80, 48: 71, 49: 74, 50: 69
     };
 
     const baseBpm = baseBpmByPlayer[playerId] || 72; // Varsayılan
@@ -407,8 +411,8 @@ function generateTodayFullData(intervalMinutes = 10) {
 
 // SVG Avatar oluşturma fonksiyonu
 function createAvatarSVG(initials, bgColor, textColor) {
-    // Sadece ASCII karakterler kullan
-    const cleanInitials = initials.replace(/[^A-Za-z]/g, '').substring(0, 2).toUpperCase();
+    // Türkçe karakterleri de dahil et
+    const cleanInitials = initials.replace(/[^A-Za-zÇçĞğİıÖöŞşÜü]/g, '').substring(0, 2).toUpperCase();
 
     // Basit SVG oluştur - daha küçük font ile
     const svgContent = `<svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><circle cx="25" cy="25" r="25" fill="${bgColor}"/><text x="25" y="30" font-size="12" font-weight="bold" text-anchor="middle" fill="${textColor}">${cleanInitials}</text></svg>`;
@@ -420,7 +424,7 @@ function createAvatarSVG(initials, bgColor, textColor) {
 const players = [
     {
         id: 1,
-        name: "Ahmet Yilmaz",
+        name: "Ahmet Yılmaz",
         age: 25,
         weight: 75,
         position: "Orta Saha",
@@ -444,7 +448,7 @@ const players = [
     },
     {
         id: 4,
-        name: "Burak Ozkan",
+        name: "Burak Özkan",
         age: 30,
         weight: 78,
         position: "Kaleci",
@@ -460,7 +464,7 @@ const players = [
     },
     {
         id: 6,
-        name: "Ali Yildiz",
+        name: "Ali Yıldız",
         age: 26,
         weight: 80,
         position: "Defans",
@@ -468,37 +472,361 @@ const players = [
     },
     {
         id: 7,
-        name: "Mustafa Celik",
+        name: "Mustafa Çelik",
         age: 29,
         weight: 85,
         position: "Forvet",
-        avatar: createAvatarSVG("MC", "#fd79a8", "#0a192f")
+        avatar: createAvatarSVG("MÇ", "#fd79a8", "#0a192f")
     },
     {
         id: 8,
-        name: "Hakan Sahin",
+        name: "Hakan Şahin",
         age: 27,
         weight: 76,
         position: "Orta Saha",
-        avatar: createAvatarSVG("HS", "#00b894", "#ffffff")
+        avatar: createAvatarSVG("HŞ", "#00b894", "#ffffff")
     },
     {
         id: 9,
-        name: "Omer Koc",
+        name: "Ömer Koç",
         age: 23,
         weight: 70,
         position: "Forvet",
-        avatar: createAvatarSVG("OK", "#e17055", "#ffffff")
+        avatar: createAvatarSVG("ÖK", "#e17055", "#ffffff")
     },
     {
         id: 10,
-        name: "Kemal Aydin",
+        name: "Kemal Aydın",
         age: 31,
         weight: 83,
         position: "Defans",
         avatar: createAvatarSVG("KA", "#6c5ce7", "#ffffff")
+    },
+    {
+        id: 11,
+        name: "Serkan Yıldırım",
+        age: 26,
+        weight: 79,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("SY", "#ff7675", "#ffffff")
+    },
+    {
+        id: 12,
+        name: "Tolga Akın",
+        age: 29,
+        weight: 81,
+        position: "Forvet",
+        avatar: createAvatarSVG("TA", "#74b9ff", "#ffffff")
+    },
+    {
+        id: 13,
+        name: "Uğurcan Çetin",
+        age: 24,
+        weight: 77,
+        position: "Kaleci",
+        avatar: createAvatarSVG("UÇ", "#a29bfe", "#ffffff")
+    },
+    {
+        id: 14,
+        name: "Barış Alper",
+        age: 27,
+        weight: 74,
+        position: "Defans",
+        avatar: createAvatarSVG("BA", "#fdcb6e", "#0a192f")
+    },
+    {
+        id: 15,
+        name: "Furkan Korkmaz",
+        age: 23,
+        weight: 71,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("FK", "#e17055", "#ffffff")
+    },
+    {
+        id: 16,
+        name: "Mert Günok",
+        age: 30,
+        weight: 84,
+        position: "Kaleci",
+        avatar: createAvatarSVG("MG", "#00b894", "#ffffff")
+    },
+    {
+        id: 17,
+        name: "Cengiz Ünder",
+        age: 25,
+        weight: 73,
+        position: "Forvet",
+        avatar: createAvatarSVG("CÜ", "#6c5ce7", "#ffffff")
+    },
+    {
+        id: 18,
+        name: "Okay Yokuşlu",
+        age: 28,
+        weight: 80,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("OY", "#fd79a8", "#ffffff")
+    },
+    {
+        id: 19,
+        name: "Çağlar Söyüncü",
+        age: 26,
+        weight: 82,
+        position: "Defans",
+        avatar: createAvatarSVG("ÇS", "#e84393", "#ffffff")
+    },
+    {
+        id: 20,
+        name: "Hakan Çalhanoğlu",
+        age: 29,
+        weight: 76,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("HÇ", "#0984e3", "#ffffff")
+    },
+    {
+        id: 21,
+        name: "Burak Yılmaz",
+        age: 37,
+        weight: 87,
+        position: "Forvet",
+        avatar: createAvatarSVG("BY", "#d63031", "#ffffff")
+    },
+    {
+        id: 22,
+        name: "Arda Turan",
+        age: 36,
+        weight: 78,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("AT", "#00cec9", "#ffffff")
+    },
+    {
+        id: 23,
+        name: "Selçuk İnan",
+        age: 38,
+        weight: 79,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("Sİ", "#e17055", "#ffffff")
+    },
+    {
+        id: 24,
+        name: "Gökhan Gönül",
+        age: 39,
+        weight: 75,
+        position: "Defans",
+        avatar: createAvatarSVG("GG", "#fdcb6e", "#0a192f")
+    },
+    {
+        id: 25,
+        name: "Volkan Demirel",
+        age: 42,
+        weight: 88,
+        position: "Kaleci",
+        avatar: createAvatarSVG("VD", "#a29bfe", "#ffffff")
+    },
+    {
+        id: 26,
+        name: "Semih Kaya",
+        age: 32,
+        weight: 85,
+        position: "Defans",
+        avatar: createAvatarSVG("SK", "#00b894", "#ffffff")
+    },
+    {
+        id: 27,
+        name: "Ozan Tufan",
+        age: 28,
+        weight: 74,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("OT", "#6c5ce7", "#ffffff")
+    },
+    {
+        id: 28,
+        name: "Cenk Tosun",
+        age: 32,
+        weight: 83,
+        position: "Forvet",
+        avatar: createAvatarSVG("CT", "#fd79a8", "#ffffff")
+    },
+    {
+        id: 29,
+        name: "Hasan Ali Kaldırım",
+        age: 33,
+        weight: 78,
+        position: "Defans",
+        avatar: createAvatarSVG("HK", "#e84393", "#ffffff")
+    },
+    {
+        id: 30,
+        name: "Yunus Mallı",
+        age: 31,
+        weight: 75,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("YM", "#0984e3", "#ffffff")
+    },
+    {
+        id: 31,
+        name: "Nihat Kahveci",
+        age: 33,
+        weight: 72,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("NK", "#d63031", "#ffffff")
+    },
+    {
+        id: 32,
+        name: "Emre Belözoğlu",
+        age: 43,
+        weight: 76,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("EB", "#00cec9", "#ffffff")
+    },
+    {
+        id: 33,
+        name: "Arda Güler",
+        age: 18,
+        weight: 68,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("AG", "#e17055", "#ffffff")
+    },
+    {
+        id: 34,
+        name: "Kerem Aktürkoğlu",
+        age: 24,
+        weight: 70,
+        position: "Forvet",
+        avatar: createAvatarSVG("KA", "#fdcb6e", "#0a192f")
+    },
+    {
+        id: 35,
+        name: "Enes Ünal",
+        age: 26,
+        weight: 78,
+        position: "Forvet",
+        avatar: createAvatarSVG("EÜ", "#a29bfe", "#ffffff")
+    },
+    {
+        id: 36,
+        name: "Orkun Kökçü",
+        age: 22,
+        weight: 73,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("OK", "#00b894", "#ffffff")
+    },
+    {
+        id: 37,
+        name: "İrfan Can Kahveci",
+        age: 27,
+        weight: 71,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("İK", "#6c5ce7", "#ffffff")
+    },
+    {
+        id: 38,
+        name: "Abdülkadir Ömür",
+        age: 24,
+        weight: 69,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("AÖ", "#fd79a8", "#ffffff")
+    },
+    {
+        id: 39,
+        name: "Dorukhan Toköz",
+        age: 27,
+        weight: 74,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("DT", "#e84393", "#ffffff")
+    },
+    {
+        id: 40,
+        name: "Umut Bozok",
+        age: 27,
+        weight: 79,
+        position: "Forvet",
+        avatar: createAvatarSVG("UB", "#0984e3", "#ffffff")
+    },
+    {
+        id: 41,
+        name: "Kenan Karaman",
+        age: 29,
+        weight: 77,
+        position: "Forvet",
+        avatar: createAvatarSVG("KK", "#d63031", "#ffffff")
+    },
+    {
+        id: 42,
+        name: "Halil Dervişoğlu",
+        age: 23,
+        weight: 75,
+        position: "Forvet",
+        avatar: createAvatarSVG("HD", "#00cec9", "#ffffff")
+    },
+    {
+        id: 43,
+        name: "Efecan Karaca",
+        age: 23,
+        weight: 72,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("EK", "#e17055", "#ffffff")
+    },
+    {
+        id: 44,
+        name: "İsmail Yüksek",
+        age: 24,
+        weight: 76,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("İY", "#fdcb6e", "#0a192f")
+    },
+    {
+        id: 45,
+        name: "Salih Özcan",
+        age: 25,
+        weight: 80,
+        position: "Orta Saha",
+        avatar: createAvatarSVG("SÖ", "#a29bfe", "#ffffff")
+    },
+    {
+        id: 46,
+        name: "Kaan Ayhan",
+        age: 28,
+        weight: 84,
+        position: "Defans",
+        avatar: createAvatarSVG("KA", "#00b894", "#ffffff")
+    },
+    {
+        id: 47,
+        name: "Zeki Çelik",
+        age: 26,
+        weight: 78,
+        position: "Defans",
+        avatar: createAvatarSVG("ZÇ", "#6c5ce7", "#ffffff")
+    },
+    {
+        id: 48,
+        name: "Mert Müldür",
+        age: 24,
+        weight: 76,
+        position: "Defans",
+        avatar: createAvatarSVG("MM", "#fd79a8", "#ffffff")
+    },
+    {
+        id: 49,
+        name: "Rıdvan Yılmaz",
+        age: 22,
+        weight: 74,
+        position: "Defans",
+        avatar: createAvatarSVG("RY", "#e84393", "#ffffff")
+    },
+    {
+        id: 50,
+        name: "Altay Bayındır",
+        age: 25,
+        weight: 82,
+        position: "Kaleci",
+        avatar: createAvatarSVG("AB", "#0984e3", "#ffffff")
     }
 ];
+
+// DEBUG: Mevcut sporcu sayısını logla
+console.log('🔍 DEBUG: Mevcut sporcu sayısı:', players.length);
+console.log('🔍 DEBUG: Sporcu ID\'ler:', players.map(p => p.id));
 
 // Çoklu sporcu için ayrı çizgiler - veri birleştirme fonksiyonları
 function generateMultiPlayerData(dataFunction, playerIds, ...args) {
