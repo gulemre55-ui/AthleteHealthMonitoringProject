@@ -28,7 +28,8 @@ function getRequiredElements() {
         resetViewBtn: document.getElementById('resetViewBtn'),
         panRightBtn: document.getElementById('panRightBtn'),
         zoomInBtn: document.getElementById('zoomInBtn'),
-        playersList: document.getElementById('playersList')
+        playersList: document.getElementById('playersList'),
+        playerSearch: document.getElementById('playerSearch')
     };
 
     // Kritik elementlerin varlığını kontrol et
@@ -49,6 +50,38 @@ function getRequiredElements() {
 document.addEventListener('DOMContentLoaded', function() {
     // jsPDF ve html2canvas'ı global olarak tanımla
     window.jsPDF = window.jspdf.jsPDF;
+
+    // Tema yönetimi
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+
+    // LocalStorage'dan tema tercihini al
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    body.classList.toggle('light-mode', savedTheme === 'light');
+    updateThemeIcon(savedTheme);
+
+    // Tema değiştirme fonksiyonu
+    function toggleTheme() {
+        const isLight = body.classList.contains('light-mode');
+        const newTheme = isLight ? 'dark' : 'light';
+
+        body.classList.toggle('light-mode');
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+    }
+
+    // Tema ikonunu güncelle
+    function updateThemeIcon(theme) {
+        if (themeToggle) {
+            themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+            themeToggle.title = theme === 'dark' ? 'Açık Tema' : 'Koyu Tema';
+        }
+    }
+
+    // Tema toggle event listener
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
 
     // DOM elementlerini güvenli şekilde seç
     const elements = getRequiredElements();
@@ -76,7 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
         resetViewBtn,
         panRightBtn,
         zoomInBtn,
-        playersList
+        playersList,
+        playerSearch
     } = elements;
 
     // Veri validasyonu fonksiyonları
@@ -186,11 +220,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerName = document.createElement('div');
             playerName.className = 'player-name';
             playerName.textContent = player.name;
+            playerName.setAttribute('data-tooltip', player.name); // Custom tooltip için
 
             // Detaylar
             const playerDetails = document.createElement('div');
             playerDetails.className = 'player-details';
             playerDetails.textContent = `${player.age} yaş • ${player.weight}kg • ${player.position}`;
+            playerDetails.setAttribute('data-tooltip', `${player.age} yaş • ${player.weight}kg • ${player.position}`); // Custom tooltip için
 
             // Çoklu seçim göstergesi
             const multiSelectIndicator = document.createElement('div');
@@ -279,6 +315,57 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Sporcu listesini başlat
     initializePlayersList();
+
+    // Arama fonksiyonu
+    function filterPlayers(searchTerm) {
+        const playerItems = playersList.querySelectorAll('.player-item');
+        const term = searchTerm.toLowerCase().trim();
+
+        playerItems.forEach(item => {
+            const playerName = item.querySelector('.player-name').textContent.toLowerCase();
+            if (playerName.includes(term)) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    // Arama input event listener
+    if (playerSearch) {
+        playerSearch.addEventListener('input', function(e) {
+            filterPlayers(e.target.value);
+        });
+    }
+
+    // Sporcu paneli yüksekliğini ana içerik ile eşitle (sadece masaüstü için)
+    function adjustPanelHeight() {
+        if (window.innerWidth <= 1024) return; // Mobil/tablet'te otomatik yükseklik
+
+        const mainContent = document.querySelector('.main-content');
+        const playersPanel = document.querySelector('.players-panel');
+
+        if (mainContent && playersPanel) {
+            const mainContentHeight = mainContent.offsetHeight;
+            playersPanel.style.height = mainContentHeight + 'px';
+        }
+    }
+
+    // Sayfa yüklendiğinde ve pencere boyutu değiştiğinde yüksekliği ayarla
+    adjustPanelHeight();
+    window.addEventListener('resize', adjustPanelHeight);
+
+    // Veri güncellendiğinde yüksekliği yeniden ayarla
+    const originalLoadChartData = loadChartData;
+    loadChartData = function(range, selectedDate) {
+        // Orijinal fonksiyonu çağır
+        const result = originalLoadChartData.call(this, range, selectedDate);
+
+        // Veri yükleme tamamlandıktan sonra yüksekliği ayarla
+        setTimeout(adjustPanelHeight, 200); // Grafik render edildikten sonra
+
+        return result;
+    };
     
     // PDF oluşturma fonksiyonu
     function generatePDF() {
@@ -355,6 +442,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Başlangıçta günlük veriyi yükle (bugün için)
     const initialDate = new Date().toISOString().split('T')[0];
     dateInput.value = initialDate; // Date input'u bugün olarak ayarla
+
+    // İlk yükleme için tarih butonlarını hemen göster
+    if (dateRow) {
+        dateRow.classList.add('show');
+    }
+
     loadChartData('daily', initialDate);
     
     // Zaman aralığı butonlarına event listener ekle

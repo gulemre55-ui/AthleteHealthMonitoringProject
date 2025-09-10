@@ -15,7 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
-<body>
+<body class="dark-mode">
     <div class="container">
         <!-- Error Message -->
         <div class="error-message" id="errorMessage">
@@ -25,9 +25,21 @@
 
         <header>
             <h1>Gerçek Zamanlı Nabız İzleme</h1>
+            <button id="themeToggle" class="theme-toggle-btn" title="Tema Değiştir">
+                🌙
+            </button>
         </header>
 
         <main class="dashboard-main">
+            <!-- Sporcu Listesi Paneli -->
+            <div class="players-panel">
+                <h3 class="panel-title">Sporcular</h3>
+                <input type="text" id="playerSearch" class="search-input" placeholder="Sporcu ara...">
+                <div class="players-list" id="playersList">
+                    <!-- Sporcu listesi JavaScript ile doldurulacak -->
+                </div>
+            </div>
+
             <!-- Ana İçerik Alanı -->
             <div class="main-content">
                 <!-- Birleşik Kontrol Paneli -->
@@ -76,14 +88,6 @@
                         <div class="stat-value" id="minBpm">--</div>
                         <div class="stat-unit">BPM</div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Sporcu Listesi Paneli -->
-            <div class="players-panel">
-                <h3 class="panel-title">Sporcular</h3>
-                <div class="players-list" id="playersList">
-                    <!-- Sporcu listesi JavaScript ile doldurulacak -->
                 </div>
             </div>
         </main>
