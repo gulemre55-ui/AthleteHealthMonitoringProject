@@ -18,7 +18,6 @@ function getRequiredElements() {
         dateInput: document.getElementById('dateInput'),
         dateRow: document.querySelector('.date-row'),
         pdfBtn: document.getElementById('pdfBtn'),
-        intervalButtons: document.querySelectorAll('.interval-btn'),
         loadingIndicator: document.getElementById('loadingIndicator'),
         errorMessage: document.getElementById('errorMessage'),
         errorText: document.getElementById('errorText'),
@@ -66,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         timeButtons,
         dateRow,
         dateInput,
-        intervalButtons,
         pdfBtn,
         loadingIndicator,
         errorMessage,
@@ -140,14 +138,8 @@ document.addEventListener('DOMContentLoaded', function() {
         selectedPlayers: [] // Çoklu seçim için array
     };
 
-    // Seçili interval değerini getiren fonksiyon
-    function getSelectedInterval() {
-        const activeButton = document.querySelector('.interval-btn.active');
-        if (activeButton) {
-            return parseInt(activeButton.getAttribute('data-interval'));
-        }
-        return 60; // Varsayılan değer (1 saat)
-    }
+    // Varsayılan interval değeri (1 saat)
+    const DEFAULT_INTERVAL = 60;
     
     // Grafik ve veri nesnelerini oluştur
     console.log('🔍 DEBUG: HeartRateChart sınıfı başlatılıyor...');
@@ -388,21 +380,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Interval butonları için event listener
-    intervalButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            // Aktif butonu güncelle
-            intervalButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-
-            // Günlük görünümde veriyi yeniden yükle
-            const activeRange = document.querySelector('.time-btn.active').getAttribute('data-range');
-            if (activeRange === 'daily') {
-                const currentDate = dateInput.value || new Date().toISOString().split('T')[0];
-                loadChartData('daily', currentDate);
-            }
-        });
-    });
 
     // PDF butonu için event listener
     if (pdfBtn) {
@@ -441,9 +418,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         if (selectedDate === today) {
                             // Bugün için 00:00'dan mevcut saate kadar göster
-                            const intervalMinutes = getSelectedInterval();
-                            console.log('🔍 DEBUG: generateMultiPlayerFrom8AMToNowData çağrılıyor, interval:', intervalMinutes, 'playerIds:', playerIds);
-                            data = HeartRateData.generateMultiPlayerFrom8AMToNowData(playerIds, intervalMinutes);
+                            console.log('🔍 DEBUG: generateMultiPlayerFrom8AMToNowData çağrılıyor, interval:', DEFAULT_INTERVAL, 'playerIds:', playerIds);
+                            data = HeartRateData.generateMultiPlayerFrom8AMToNowData(playerIds, DEFAULT_INTERVAL);
                             console.log('🔍 DEBUG: Günlük veri üretildi, uzunluk:', data.length, 'örnek:', data.slice(0, 3));
                         } else {
                             // Geçmiş gün için 00:00'dan 23:59'a kadar tüm saatleri göster
@@ -451,9 +427,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 showErrorMessage('Geçersiz tarih formatı!');
                                 return;
                             }
-                            const intervalMinutes = getSelectedInterval();
-                            console.log('🔍 DEBUG: generateMultiPlayerDataForDate çağrılıyor, tarih:', selectedDate, 'interval:', intervalMinutes, 'playerIds:', playerIds);
-                            data = HeartRateData.generateMultiPlayerDataForDate(playerIds, selectedDate, intervalMinutes);
+                            console.log('🔍 DEBUG: generateMultiPlayerDataForDate çağrılıyor, tarih:', selectedDate, 'interval:', DEFAULT_INTERVAL, 'playerIds:', playerIds);
+                            data = HeartRateData.generateMultiPlayerDataForDate(playerIds, selectedDate, DEFAULT_INTERVAL);
                             console.log('🔍 DEBUG: Geçmiş tarih verisi üretildi, uzunluk:', data.length);
                         }
                         break;
@@ -483,9 +458,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
         
                 console.log('🔍 DEBUG: updateChartData çağrılıyor...');
-                const currentInterval = getSelectedInterval();
-                heartRateChart.updateChartData(data, range, selectedDate, currentInterval, appState.selectedPlayers);
-                console.log('✅ DEBUG: Chart güncellendi, interval:', currentInterval, 'selectedPlayers:', appState.selectedPlayers.length);
+                heartRateChart.updateChartData(data, range, selectedDate, DEFAULT_INTERVAL, appState.selectedPlayers);
+                console.log('✅ DEBUG: Chart güncellendi, interval:', DEFAULT_INTERVAL, 'selectedPlayers:', appState.selectedPlayers.length);
                 updateStats(data, range);
 
                 // Günlük görünümde anlık değeri güncelleme kaldırıldı
