@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', function() {
             playerElement.appendChild(playerInfo);
             playerElement.appendChild(multiSelectIndicator);
 
-            // İlk iki sporcuyu varsayılan olarak seç (çoklu seçim için)
-            if (index === 0 || index === 1) {
+            // İlk sporcuyu varsayılan olarak seç
+            if (index === 0) {
                 playerElement.classList.add('active');
                 appState.selectedPlayers.push(player);
                 console.log('✅ DEBUG: Sporcu varsayılan olarak seçildi:', player.name);
