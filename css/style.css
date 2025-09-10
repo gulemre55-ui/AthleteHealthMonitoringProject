@@ -429,7 +429,7 @@ header h1 {
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: thin;
-    scrollbar-color: #64ffda #233554;
+    scrollbar-color: #64ffda #8a93a1;
 }
 
 #heartRateChart {
@@ -785,13 +785,14 @@ header h1 {
 .main-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
 .players-panel {
     background-color: #112240;
     border-radius: 15px;
     padding: 20px;
+    padding-bottom: 30px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     border: 1px solid #233554;
     height: 100%; /* Ana grid yüksekliğine eşitle */
@@ -806,7 +807,7 @@ header h1 {
     margin-bottom: 15px;
     text-align: center;
     border-bottom: 2px solid #64ffda;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
 }
 
 .search-input {
@@ -846,6 +847,8 @@ header h1 {
     scrollbar-width: thin;
     scrollbar-color: #64ffda #233554;
     min-height: 0; /* Flex item olarak küçülmesine izin ver */
+    padding-bottom: 20px;
+    padding-right: 15px;
 }
 
 .players-list::-webkit-scrollbar {
@@ -853,7 +856,7 @@ header h1 {
 }
 
 .players-list::-webkit-scrollbar-track {
-    background: #233554;
+    background: #ff0000;
     border-radius: 3px;
 }
 
@@ -872,7 +875,7 @@ header h1 {
 }
 
 .light-mode .players-list::-webkit-scrollbar-track {
-    background: #f8f9fa;
+    background: #ffffff;
     border-radius: 4px;
 }
 
